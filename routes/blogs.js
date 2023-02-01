@@ -57,10 +57,10 @@ const blogs = [
 	})
 
 
-    res.json({success:true})
+    res.json({success:true, singleBlog})
   })
 
-  router.delete('/single/:title', function(req,res){
+  router.delete('/delete/:title', function(req,res){
     const blogToDelete = req.params.title
 
     const deleteBlogIndex = blogs.findIndex((blog) => {
@@ -71,7 +71,7 @@ const blogs = [
 
 
 
-    res.json({success:true})
+    res.json({success:true, deleteBlogIndex})
   })
 
 
