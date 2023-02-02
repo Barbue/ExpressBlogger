@@ -1,7 +1,7 @@
 
 
 
-const blogData = () => {
+const validateBlogData = (blogData) => {
 
     if (req.body.title === undefined || typeof(req.body.title) !== "string") {
         res.json({
@@ -46,7 +46,7 @@ const blogData = () => {
 
 
 
-module.exports = { blogData }
+module.exports = {validateBlogData}
 
        
       

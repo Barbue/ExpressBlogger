@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { blogData } = require('./validation/blogs.js')
+const {validateBlogData} = require('../validation/blogs')
+
+
 
 const blogs = [
     {
@@ -46,6 +48,7 @@ const blogs = [
   ]
 
   
+  
 
   router.get('/all', function(req,res){
           
@@ -76,9 +79,11 @@ const blogs = [
   })
 
 
-
+ 
   router.post('/create-one/', function(req,res){
-   
+    
+    
+    
   const newBlog = {}
   newBlog.title = req.body.title,
   newBlog.text = req.body.text,
@@ -86,7 +91,21 @@ const blogs = [
   newBlog.category = req.body.category,
   newBlog.createdAt = new Date(),
   newBlog.lastModified = new Date()
+
+  //validateBlogData(newBlog)
+
+  
+  
+   
+
+
+
+
     console.log(newBlog)
+
+    
+
+    
     blogs.push(newBlog)
 
     res.json({
@@ -96,6 +115,7 @@ const blogs = [
 
   router.put('/update-one/:title',function(req,res){
     const blogToUpdate = req.params.title
+    
 
     const originalBlog = blogs.find((blog) => {
     return blog.title === blogToUpdate
@@ -104,8 +124,11 @@ const blogs = [
   const originalBlogIndex = blogs.findIndex((blog) => {
     return blog.title === blogToUpdate
   })
-
+  
   const updatedBlog = {}
+
+  
+  
 
   if (req.body.title !== undefined) {
     updatedBlog.title = req.body.title
@@ -118,6 +141,8 @@ const blogs = [
   if (req.body.author !== undefined) {
     updatedBlog.author = req.body.author
   } else {updatedBlog.author = originalBlog.author}
+
+ 
 
   //category
   // if (req.body.category !== undefined) {
