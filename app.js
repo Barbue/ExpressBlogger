@@ -12,7 +12,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const blogsRouter = require('./routes/blogs');
 
-//instantiate te actual express app
+//instantiate the actual express app
 // const port = 3001
 const app = express();
 

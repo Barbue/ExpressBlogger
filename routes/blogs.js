@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { blogData } = require('./validation/blogs.js')
 
 const blogs = [
     {
@@ -74,6 +75,65 @@ const blogs = [
     res.json({success:true, deleteBlogIndex})
   })
 
+
+
+  router.post('/create-one/', function(req,res){
+   
+  const newBlog = {}
+  newBlog.title = req.body.title,
+  newBlog.text = req.body.text,
+  newBlog.author = req.body.author,
+  newBlog.category = req.body.category,
+  newBlog.createdAt = new Date(),
+  newBlog.lastModified = new Date()
+    console.log(newBlog)
+    blogs.push(newBlog)
+
+    res.json({
+      success: true,
+    })
+  })
+
+  router.put('/update-one/:title',function(req,res){
+    const blogToUpdate = req.params.title
+
+    const originalBlog = blogs.find((blog) => {
+    return blog.title === blogToUpdate
+  })
+
+  const originalBlogIndex = blogs.findIndex((blog) => {
+    return blog.title === blogToUpdate
+  })
+
+  const updatedBlog = {}
+
+  if (req.body.title !== undefined) {
+    updatedBlog.title = req.body.title
+  } else {updatedBlog.title = originalBlog.title}
+
+  if (req.body.text !== undefined) {
+    updatedBlog.text = req.body.text
+  } else {updatedBlog.text = originalBlog.text}
+//author
+  if (req.body.author !== undefined) {
+    updatedBlog.author = req.body.author
+  } else {updatedBlog.author = originalBlog.author}
+
+  //category
+  // if (req.body.category !== undefined) {
+  //   updatedBlog.category = req.body.category
+  // } else {updatedBlog.category = originalBlog.category}
+
+  updatedBlog.createdAt = originalBlog.createdAt
+  updatedBlog.lastModified = new Date()
+
+ console.log(originalBlogIndex)
+
+ blogs[originalBlogIndex] = updatedBlog
+      console.log(updatedBlog)
+
+res.json({success: true,})
+  })
 
  
  
