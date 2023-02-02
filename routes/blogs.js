@@ -82,7 +82,6 @@ const blogs = [
             })
   });
 
-
   // Posts a new blog object entry within array of blog entry objects
   router.post('/create-one/', function(req,res){
 
@@ -106,8 +105,9 @@ const blogs = [
   console.log(newBlog)
   blogs.push(newBlog)
 
+ // In the catch block, we always want to do 2 things: console.log the error and respond with an error object
   } catch (e) {
-		// In the catch block, we always want to do 2 things: console.log the error and respond with an error object
+		
 
     console.log(e);
     res.json({success: false,
@@ -135,26 +135,23 @@ router.put('/update-one/:title',function(req,res){
 try {
   
   const updatedBlog = {}
-   //title
 
+   //title
   if (req.body.title !== undefined) {
     updatedBlog.title = req.body.title
   } else {updatedBlog.title = originalBlog.title}
 
   //text
-
   if (req.body.text !== undefined) {
     updatedBlog.text = req.body.text
   } else {updatedBlog.text = originalBlog.text}
 
   //author
-
   if (req.body.author !== undefined) {
     updatedBlog.author = req.body.author
   } else {updatedBlog.author = originalBlog.author}
 
   //category
-
   if (req.body.category !== undefined) {
     updatedBlog.category = req.body.category
   } else {updatedBlog.category = originalBlog.category}
@@ -167,7 +164,6 @@ try {
   }
   console.log(originalBlogIndex)
 
-  
   blogs[originalBlogIndex] = updatedBlog
   updatedBlog.createdAt = originalBlog.createdAt
   updatedBlog.lastModified = new Date()
@@ -188,14 +184,6 @@ res.json({success: true,
 });
 
  
-
-
-
- 
- 
-
-
-
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
