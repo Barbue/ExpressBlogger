@@ -102,8 +102,10 @@ const blogs = [
     throw Error(userDataCheck.message)
   }
 
-  console.log(newBlog)
-  blogs.push(newBlog)
+  console.log(newBlog.category.length);
+  console.log(newBlog.category);
+  console.log(newBlog);
+  blogs.push(newBlog);
 
  // In the catch block, we always want to do 2 things: console.log the error and respond with an error object
   } catch (e) {

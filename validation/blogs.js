@@ -41,6 +41,30 @@ const validateBlogData = (blogData) => {
         }
     }
 
+    if(blogData.category === undefined || blogData.category.length <= 0 ){
+      return {
+        isValid: false,
+        message: "The category must be defined and greater than 0"
+      }
+    }
+
+      if(blogData.category.length > 10 ){
+        return {
+          isValid: false,
+          message: "There can be no more than 10 category entries and they must be strings"
+        }
+      }
+ 
+      
+
+
+    
+
+
+
+
+
+
    return { 
      isValid: true
           }
