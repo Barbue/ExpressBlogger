@@ -3,55 +3,49 @@
 
 const validateBlogData = (blogData) => {
 
-    if (req.body.title === undefined || typeof(req.body.title) !== "string") {
-        res.json({
-          success: false,
+    if (blogData.title === undefined || typeof(blogData.title) !== "string") {
+        return {
+          isValid: false,
           message: "A title is required and it must be a string"
-        })
-        //return   
-    }
+        }
+        }
+        
 
-        if (req.body.text === undefined || typeof(req.body.text) !== "string") {
-            res.json({
-              success: false,
+        if (blogData.text === undefined || typeof(blogData.text) !== "string") {
+          return {
+            isValid: false,
               message: "A text is required and it must be a string"
-            })
-            //return   
+      }
+              
       }
 
-      if (req.body.author === undefined || typeof(req.body.author) !== "string") {
-        res.json({
-          success: false,
+
+      if (blogData.author === undefined || typeof(blogData.author) !== "string") {
+        return {
+          isValid: false,
           message: "An author is required and it must be a string"
-        })
-        //return  
+        }
+        
       }
-      if (req.body.title.length > 40) {
-        res.json({
-          success: false,
+      if (blogData.title.length > 40) {
+        return {
+          isValid: false,
           message: "The title cannot be longer than 40 characters"
-        })
-        // return
+        }
     }
 
-    if (req.body.author.length > 40) {
-        res.json({
-          success: false,
+    if (blogData.author.length > 40) {
+        return {
+          isValid: false,
           message: "The author cannot be longer than 40 characters"
-        })
-        // return
+        }
     }
 
+   return { 
+     isValid: true
+          }
 }
 
-
-
-module.exports = {validateBlogData}
-
-       
-      
-
-
-
+module.exports = { validateBlogData }
 
 

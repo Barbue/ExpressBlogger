@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const {validateBlogData} = require('../validation/blogs')
-
+// Import of validation function from validation/blogs
+const {validateBlogData} = require('../validation/blogs');
 
 
 const blogs = [
@@ -46,24 +46,28 @@ const blogs = [
       lastModified: "2022-03-22T15:14:39.819Z",
     },
   ]
-
-  
-  
-
+ // Gets all blogData entries
   router.get('/all', function(req,res){
           
-    res.json({ success:true, blogs:blogs})
-  })
+    res.json({ success:true, 
+               blogs:blogs
+             })
+  });
 
+  // Gets a single blog entry from array of blog objects
   router.get('/single/:title', function(req,res){
+
     const singleBlog = blogs.find((blog)=>{
 		return blog.title === req.params.title
 	})
 
+   res.json({success:true, 
+             singleBlog
+            })
 
-    res.json({success:true, singleBlog})
-  })
+  });
 
+  //Deletes a given blog by way of title
   router.delete('/delete/:title', function(req,res){
     const blogToDelete = req.params.title
 
@@ -73,50 +77,53 @@ const blogs = [
 
     blogs.splice(deleteBlogIndex,1)
 
+    res.json({success:true, 
+              deleteBlogIndex
+            })
+  });
 
 
-    res.json({success:true, deleteBlogIndex})
-  })
-
-
- 
+  // Posts a new blog object entry within array of blog entry objects
   router.post('/create-one/', function(req,res){
+
+  try {
     
-    
-    
-  const newBlog = {}
-  newBlog.title = req.body.title,
-  newBlog.text = req.body.text,
-  newBlog.author = req.body.author,
-  newBlog.category = req.body.category,
-  newBlog.createdAt = new Date(),
-  newBlog.lastModified = new Date()
+     const newBlog = {}
 
-  //validateBlogData(newBlog)
+     newBlog.title = req.body.title,
+     newBlog.text = req.body.text,
+     newBlog.author = req.body.author,
+     newBlog.category = req.body.category,
+     newBlog.createdAt = new Date(),
+     newBlog.lastModified = new Date()
 
-  
-  
-   
+    const userDataCheck = validateBlogData(newBlog)
+
+  if (userDataCheck.isValid === false) {
+    throw Error(userDataCheck.message)
+  }
+
+  console.log(newBlog)
+  blogs.push(newBlog)
+
+  } catch (e) {
+		// In the catch block, we always want to do 2 things: console.log the error and respond with an error object
+
+    console.log(e);
+    res.json({success: false,
+			        error: String(e)
+	          });
+  }
+  res.json({success: true,
+          })
+});
 
 
+// Puts a modication of a given blog object entry by way of title
+router.put('/update-one/:title',function(req,res){
 
-
-    console.log(newBlog)
-
-    
-
-    
-    blogs.push(newBlog)
-
-    res.json({
-      success: true,
-    })
-  })
-
-  router.put('/update-one/:title',function(req,res){
     const blogToUpdate = req.params.title
     
-
     const originalBlog = blogs.find((blog) => {
     return blog.title === blogToUpdate
   })
@@ -124,41 +131,65 @@ const blogs = [
   const originalBlogIndex = blogs.findIndex((blog) => {
     return blog.title === blogToUpdate
   })
+
+try {
   
   const updatedBlog = {}
-
-  
-  
+   //title
 
   if (req.body.title !== undefined) {
     updatedBlog.title = req.body.title
   } else {updatedBlog.title = originalBlog.title}
 
+  //text
+
   if (req.body.text !== undefined) {
     updatedBlog.text = req.body.text
   } else {updatedBlog.text = originalBlog.text}
-//author
+
+  //author
+
   if (req.body.author !== undefined) {
     updatedBlog.author = req.body.author
   } else {updatedBlog.author = originalBlog.author}
 
- 
-
   //category
-  // if (req.body.category !== undefined) {
-  //   updatedBlog.category = req.body.category
-  // } else {updatedBlog.category = originalBlog.category}
 
+  if (req.body.category !== undefined) {
+    updatedBlog.category = req.body.category
+  } else {updatedBlog.category = originalBlog.category}
+
+  // Checks validity of blogData by way of function in validation/blogs.js
+  const userDataCheck = validateBlogData(updatedBlog)
+
+  if (userDataCheck.isValid === false) {
+  throw Error(userDataCheck.message)
+  }
+  console.log(originalBlogIndex)
+
+  
+  blogs[originalBlogIndex] = updatedBlog
   updatedBlog.createdAt = originalBlog.createdAt
   updatedBlog.lastModified = new Date()
+  console.log(updatedBlog)
 
- console.log(originalBlogIndex)
+// In the catch block, we always want to do 2 things: console.log the error and respond with an error object
+} catch (e) {
+		
+    console.log(e);
 
- blogs[originalBlogIndex] = updatedBlog
-      console.log(updatedBlog)
+    res.json({
+			success: false,
+			error: String(e)
+		        });
+}
+res.json({success: true,
+        })
+});
 
-res.json({success: true,})
-  })
+ 
+
+
 
  
  
