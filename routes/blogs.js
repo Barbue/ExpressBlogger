@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 // Import of validation function from validation/blogs
-//const {validateBlogData} = require('../validation/blogs');
+const {validateBlogData} = require('../validation/blogs');
 
 //instantiate mongodb 
 const { db } = require('../mongo');
@@ -23,38 +23,52 @@ router.get('/all', async function(req, res, next) {
 
     res.json({
       sucess:true,
-      
       blogs: blogs
     });
-  });
+});
 
 
 
-  router.get('/get-one/', async function(req, res, next) {
-    const blogs = await db()
-    .collection('sample_blogs')
-    .find({})
-    .limit(1)
-    .toArray(function(err, result){
-        if (err) {
+router.get('/get-one/', async function(req, res, next) {
+  const blogs = await db()
+  .collection('sample_blogs')
+  .find({})
+  .limit(1)
+  .toArray(function(err, result){
+      if (err) {
           res.status(400).send("error fetching blogs")
-        } else {
+      } else {
           res.json(result);
-        }
+      }
       }); 
   
       res.json({
         sucess:true,
-        
         blogs: blogs
       });
-    });
+});
+
+
+router.get('/get-one/:author', async function(req, res, next) {
+  const blogs = await db()
+  .collection('sample_blogs')
+  .find({author: req.params.author})
+  .toArray(function(err, result){
+      if (err) {
+         res.status(400).send("error fetching blogs")
+          } else {
+            res.json(result);
+        }
+        }); 
+    
+        res.json({
+          sucess:true,
+          blogs: blogs
+        });
+      });
 
 
     router.get('/single/:id', async function(req, res, next) {
-      //let singleTitle = {id:req.params.id}
-
-      //let singleTitle = req.params.id
       const blogs = await db()
       .collection('sample_blogs')
       .find({id:req.params.id})
@@ -65,29 +79,45 @@ router.get('/all', async function(req, res, next) {
             res.json(result);
           }
         }); 
+
       res.json({
           sucess:true,
-          sample_blogs: blogs
-          
-      });
-      });
+          blogs: blogs
+       });
+       });
+
 
       router.post('/create-one/', async function(req, res, next) {
-      const blogs = await db()
-        .collection('sample_blogs')
-        .insertOne({
-           title : req.body.title,
+  try {
+       let newBlogPost = 
+      {   title : req.body.title,
            text : req.body.text,
            author : req.body.author,
            category : req.body.category,
            createdAt : new Date(),
            lastModified : new Date()
-          });
-          
-          res.json({
-  sucess:true,
-});
-});
+      };
+      const userDataCheck = validateBlogData(newBlogPost)
+        if (userDataCheck.isValid === false) {
+        throw Error(userDataCheck.message)
+      }
+      const blogs = await db()
+        .collection('sample_blogs')
+        .insertOne({ newBlogPost
+           
+      });
+      } catch (e) {
+		    console.log(e);
+
+        res.json({success: false,
+           error: String(e)
+      });
+      }
+      res.json({
+              sucess:true,
+              //blogs: newBlogPost
+      });
+      });
 
         
   
