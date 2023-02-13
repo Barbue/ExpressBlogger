@@ -115,11 +115,45 @@ router.get('/get-one/:author', async function(req, res, next) {
       }
       res.json({
               sucess:true,
-              //blogs: newBlogPost
       });
       });
 
+
+    router.get('/all-sorted', async function(req, res, next) {
+        const blogs = await db()
+        .collection('sample_blogs')
+        .find({})
+        .sort({author: 1})
+        .toArray(function(err, result){
+            if (err) {
+              res.status(400).send("error fetching blogs")
+            } else {
+              res.json(result);
+            }
+          }); 
+      
+          res.json({
+            sucess:true,
+            blogs: blogs
+          });
+      });
+
+
+      router.get('/delete-multi', async function(req, res, next) {
+      try {
+        const blogs = await db()
+        .collection('sample_blogs')
+        .deleteMany({"newBlogPost.author": "Odin"})
         
+      } catch (e) {
+           print (e);
+      }
+       res.json({
+            sucess:true,
+      });
+      });
+
+
   
         
           
