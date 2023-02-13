@@ -54,10 +54,10 @@ router.get('/all', async function(req, res, next) {
     router.get('/single/:id', async function(req, res, next) {
       //let singleTitle = {id:req.params.id}
 
-      let singleTitle = req.params.id
+      //let singleTitle = req.params.id
       const blogs = await db()
       .collection('sample_blogs')
-      .find({singleTitle})
+      .find({id:req.params.id})
       .toArray(function(err, result){
           if (err) {
             res.status(400).send("error fetching blogs")
@@ -67,7 +67,7 @@ router.get('/all', async function(req, res, next) {
         }); 
       res.json({
           sucess:true,
-          singleTitle
+          sample_blogs: blogs
           
       });
       });
@@ -81,9 +81,10 @@ router.get('/all', async function(req, res, next) {
            author : req.body.author,
            category : req.body.category,
            createdAt : new Date(),
-           lastModified : new Date()})
-
-  res.json({
+           lastModified : new Date()
+          });
+          
+          res.json({
   sucess:true,
 });
 });
